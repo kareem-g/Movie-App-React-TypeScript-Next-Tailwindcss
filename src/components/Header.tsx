@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { Bell, BellOutline, Search } from "heroicons-react";
+import { BellOutline, Search } from "heroicons-react";
 import Link from "next/link";
 
 export const Header = () => {
@@ -19,7 +19,7 @@ export const Header = () => {
   }, [handleScroll]);
 
   return (
-    <header className={`${isScrolled && "bg-[#141414]"}`}>
+    <header className={`${isScrolled && "bg-[#141414]/30 backdrop-blur-md"}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
         <Image
           width={100}

@@ -13,6 +13,42 @@
 }
 
 @layer components {
+  .overlay-slick-hero {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      theme("colors.black") 30%,
+      transparent 90%,
+      theme("colors.transparent")
+    );
+  }
+
+  .overlay-film-cover {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 10%,
+      theme("colors.black")
+    );
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1.2fr));
+    align-items: center;
+    font-size: 62.5%;
+    font-family: sans-serif;
+    color: white;
+  }
+
   .headerLink {
     @apply cursor-pointer text-sm font-medium text-[#e5e5e5] transition duration-[.4s] hover:text-[#b3b3b3];
   }
