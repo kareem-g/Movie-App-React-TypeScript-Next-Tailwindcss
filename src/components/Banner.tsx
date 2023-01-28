@@ -3,6 +3,8 @@ import { InformationCircleOutline, Play } from "heroicons-react";
 import Image from "next/legacy/image";
 import React, { useEffect, useState } from "react";
 import { Movie } from "types";
+import { useRecoilState } from "recoil";
+import { modalState, movieState } from "atoms/ModalAtoms";
 
 export default function Banner({
   netflixOriginals,
@@ -10,7 +12,8 @@ export default function Banner({
   netflixOriginals: Movie[];
 }) {
   const [movie, setMovie] = useState<Movie | null>(null);
-
+  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
+  const [showModal, setShowModal] = useRecoilState(modalState);
   useEffect(() => {
     setMovie(
       netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)]
@@ -41,18 +44,19 @@ export default function Banner({
         <button
           className="text-black bg-white bannerButton"
           onClick={() => {
-            // setCurrentMovie(movie)
-            // setShowModal(true)
+            setCurrentMovie(movie);
+            setShowModal(true);
           }}
         >
           <Play className="w-4 h-4 text-black md:h-7 md:w-7" />
           Play
         </button>
+
         <button
           onClick={() => {
             console.log("More Info clicked: ", movie?.title);
-            // setCurrentMovie(movie)
-            // setShowModal(true)
+            setCurrentMovie(movie);
+            setShowModal(true);
           }}
           className="bannerButton bg-[gray]/50"
         >

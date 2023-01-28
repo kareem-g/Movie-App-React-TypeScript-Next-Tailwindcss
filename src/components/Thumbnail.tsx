@@ -61,7 +61,12 @@ export const Thumbnail = ({
           delay: 0.5,
           ease: [0, 0.71, 0.2, 1.01],
         }}
-        onClick={handleChangePage}
+        // onClick={handleChangePage}
+        onClick={() => {
+          setCurrentMovie(movie);
+          setShowModal(true);
+          // handleChangePage
+        }}
         className={
           isDetails
             ? `relative h-28 min-w-[180px] cursor-pointer transition-transform duration-200 ease-out md:h-[200px] md:min-w-[350px] md:hover:scale-105`

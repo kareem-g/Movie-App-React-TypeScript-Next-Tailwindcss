@@ -3,7 +3,7 @@ import Image from "next/legacy/image";
 import React from "react";
 import { Companies, Details } from "types";
 
-export default function Companies({
+export default function CompaniesRow({
   MovieDetails,
 }: {
   MovieDetails: Details | undefined;

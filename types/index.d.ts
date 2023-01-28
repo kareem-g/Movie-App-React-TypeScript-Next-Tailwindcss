@@ -3,6 +3,13 @@ export interface Genre {
   name: string;
 }
 
+export interface Companies {
+  id: number;
+  logo_path: string;
+  name: string;
+  origin_country: string;
+}
+
 export interface Movie {
   title: string;
   backdrop_path: string;
@@ -21,13 +28,7 @@ export interface Movie {
   vote_average: number;
   vote_count: number;
   runtime: number;
-}
-
-export interface Companies {
-  id: number;
-  logo_path: string;
-  name: string;
-  origin_country: string;
+  production_companies: Companies[];
 }
 
 export interface Languages {
@@ -143,7 +144,7 @@ export interface MovieTrailer {
   type: string;
 }
 
-export interface Element {
+export interface Item {
   type:
     | "Bloopers"
     | "Featurette"
