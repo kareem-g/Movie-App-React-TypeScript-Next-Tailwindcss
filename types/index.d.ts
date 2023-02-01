@@ -1,3 +1,5 @@
+import { Action } from "easy-peasy";
+
 export interface Genre {
   id: number;
   name: string;
@@ -27,8 +29,12 @@ export interface Movie {
   poster_path: string;
   vote_average: number;
   vote_count: number;
-  runtime: number;
   production_companies: Companies[];
+  runtime: number;
+  episode_run_time: number;
+  number_of_episodes: number;
+  number_of_seasons: number;
+  imdb_id: string;
 }
 
 export interface Languages {
@@ -152,4 +158,17 @@ export interface Item {
     | "Clip"
     | "Trailer"
     | "Teaser";
+}
+
+export interface IStoreModal {
+  searchedTerm: string | null;
+  searchResults: never[];
+  favourites: never[];
+  searching: boolean;
+  addFavourites: Action<{}, any>;
+  clearSearch: Action<{}, any>;
+  clearResults: Action<{}, any>;
+  setSearchTerm: Action<{}, any>;
+  setSearchResults: Action<{}, any>;
+  setSearching: Action<{}, any>;
 }

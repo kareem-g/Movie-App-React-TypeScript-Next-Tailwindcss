@@ -1,9 +1,22 @@
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { BellOutline, Search } from "heroicons-react";
+import {
+  BellOutline,
+  SearchCircleOutline,
+  SearchOutline,
+} from "heroicons-react";
 import Link from "next/link";
+import Search from "./Search";
 
-export const Header = () => {
+export const Header = ({
+  isSearch,
+  setSearchTerm,
+  searchTrem,
+}: {
+  isSearch?: boolean;
+  setSearchTerm?: any;
+  searchTrem?: string;
+}) => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   const handleScroll = useCallback(() => {
@@ -30,7 +43,7 @@ export const Header = () => {
 
         <ul className="hidden space-x-4 md:flex">
           <li>
-            <a href="/browse" className="headerLink">
+            <a href="" className="headerLink">
               Home
             </a>
           </li>
@@ -59,7 +72,16 @@ export const Header = () => {
 
       {/* Search, Notification bell and profile picture */}
       <div className="flex items-center space-x-4 text-sm">
-        <Search className="hidden h-6 w-6 sm:inline" />
+        {/* <Search className="hidden h-6 w-6 sm:inline" /> */}
+        <Search />
+        {/* {isSearch ? (
+          <Search searchTrem={searchThrem!} setSearchTerm={setSearchTerm} />
+        ) : (
+          <SearchCircleOutline
+            className="hidden sm:inline sm:w-6 sm:h-6 cursor-pointer"
+            onClick={() => router.push("/")}
+          />
+        )} */}
         <p className="hidden uppercase lg:inline">DVD</p>
         <BellOutline className="h-6 w-6" />
         <Link href="/YourAccount">

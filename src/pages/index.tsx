@@ -1,15 +1,19 @@
 import Head from "next/head";
 import { Header } from "@/components/Header";
 import Banner from "@/components/Banner";
-import requests from "api";
+import { requests, tvRequests } from "api";
+
 import { GetServerSideProps } from "next";
 import { Movie } from "types";
 import { Row } from "@/components/Row";
 import { motion } from "framer-motion";
 import { useRecoilValue } from "recoil";
-import { modalState, movieState } from "atoms/ModalAtoms";
+import { modalState } from "atoms/ModalAtoms";
 import Modal from "@/components/Modal";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useStoreActions, useStoreRehydrated, useStoreState } from "easy-peasy";
+import ThumbnailSkeleton from "@/components/ThumbnailSkeleton";
+import { useRouter } from "next/router";
 
 interface Props {
   netflixOriginals: Movie[];
@@ -20,6 +24,7 @@ interface Props {
   horrorMovies: Movie[];
   romanceMovies: Movie[];
   documentaries: Movie[];
+  tvPopular: Movie[];
   // products: Product[]
 }
 
@@ -32,9 +37,41 @@ export default function Home({
   romanceMovies,
   topRated,
   trendingNow,
+  tvPopular,
 }: Props) {
-  const showModal = useRecoilValue(modalState);
-  const movie = useRecoilValue(movieState);
+  const myList = useStoreState((state: any) =>
+    state.myList.sort((a: any, b: any) => b.dateAdded - a.dateAdded)
+  );
+  const modalOpen = useStoreState((state: any) => state.modalOpen);
+  const isRehydrated = useStoreRehydrated();
+  const clearMyList = useStoreActions((actions: any) => actions.clearMyList);
+
+  const [data, setData] = useState<any>([]);
+  const router = useRouter();
+
+  const slug = router.query.search;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchData = async () => {
+    const movieSearchdata = await fetch(
+      `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US&query=${slug}&page=1&include_adult=true&media_type=`
+    ).then((res) => res.json());
+    setData(movieSearchdata.results);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [slug, fetchData]);
+
+  const MoviesAndSeries = (arr: any, media_type: any) => {
+    if (slug != "") {
+      return arr.filter((obj: any) => obj.media_type !== media_type);
+    } else {
+      return null;
+    }
+  };
+
+  console.log("Slug Is", MoviesAndSeries(data, "person"));
 
   return (
     <Suspense>
@@ -52,69 +89,108 @@ export default function Home({
         <Header />
         {/* Header */}
         <main className="relative pb-24 pl-4 lg:space-y-24 lg:pl-16">
-          {/* Banner */}
-          <Banner netflixOriginals={topRated} />
+          {slug ? (
+            <main className="pl-4 pb-4 lg:space-y-24">
+              <section className="md:space-y-16 pt-36 pb-4 mb-4">
+                <Row
+                  isDetails={false}
+                  title="Search"
+                  movies={MoviesAndSeries(data, "person")}
+                  type="movie"
+                  isSearch={true}
+                />
+              </section>
+            </main>
+          ) : (
+            <>
+              {/* Banner */}
+              <Banner netflixOriginals={topRated} />
 
-          {/* <h1 className="flex min-h-screen flex-col items-center justify-center py-2">
+              {/* <h1 className="flex min-h-screen flex-col items-center justify-center py-2">
           Netflix - Home
+          <button
+            onClick={() => {
+              clearMyList();
+            }}
+          >
+            clear my list
+          </button>
         </h1> */}
+              <section className="md:space-y-16 pt-36 pb-4 mb-4">
+                {myList.length > 0 && (
+                  <>
+                    <Row
+                      isDetails={false}
+                      title="My List"
+                      movies={myList}
+                      type=""
+                    />
+                  </>
+                )}
+                <Row
+                  isDetails={false}
+                  title="Popular TV Shows"
+                  movies={tvPopular}
+                  type="tv"
+                />
 
-          <section className="md:space-y-16 pt-36 pb-4 mb-4">
-            <Row
-              isDetails={false}
-              title="Trending Now"
-              movies={trendingNow}
-              type="movie"
-            />
-            <Row
-              isDetails={false}
-              title="Top Rated"
-              movies={topRated}
-              type="movie"
-            />
-            <Row
-              isDetails={false}
-              title="Netflix Originals"
-              movies={netflixOriginals}
-              type="movie"
-            />
-            <Row
-              isDetails={false}
-              title="Action Thrillers"
-              movies={actionMovies}
-              type="movie"
-            />
-            {/* My List */}
-            {/* {list.length > 0 && <Row title="My List" movies={list} />} */}
+                <Row
+                  isDetails={false}
+                  title="Trending Now"
+                  movies={trendingNow}
+                  type="movie"
+                />
+                <Row
+                  isDetails={false}
+                  title="Top Rated"
+                  movies={topRated}
+                  type="movie"
+                />
+                <Row
+                  isDetails={false}
+                  title="Netflix Originals"
+                  movies={netflixOriginals}
+                  type="movie"
+                />
+                <Row
+                  isDetails={false}
+                  title="Action Thrillers"
+                  movies={actionMovies}
+                  type="movie"
+                />
+                {/* My List */}
+                {/* {list.length > 0 && <Row title="My List" movies={list} />} */}
 
-            <Row
-              isDetails={false}
-              title="Comedies"
-              movies={comedyMovies}
-              type="movie"
-            />
-            <Row
-              isDetails={false}
-              title="Scary Movies"
-              movies={horrorMovies}
-              type="movie"
-            />
-            <Row
-              isDetails={false}
-              title="Romance Movies"
-              movies={romanceMovies}
-              type="movie"
-            />
-            <Row
-              isDetails={false}
-              title="Documentaries"
-              movies={documentaries}
-              type="movie"
-            />
-          </section>
+                <Row
+                  isDetails={false}
+                  title="Comedies"
+                  movies={comedyMovies}
+                  type="movie"
+                />
+                <Row
+                  isDetails={false}
+                  title="Scary Movies"
+                  movies={horrorMovies}
+                  type="movie"
+                />
+                <Row
+                  isDetails={false}
+                  title="Romance Movies"
+                  movies={romanceMovies}
+                  type="movie"
+                />
+                <Row
+                  isDetails={false}
+                  title="Documentaries"
+                  movies={documentaries}
+                  type="movie"
+                />
+              </section>
+            </>
+          )}
         </main>
         {/* Modal */}
-        {showModal && <Modal />}
+        {modalOpen && <Modal />}
       </motion.div>
     </Suspense>
   );
@@ -129,6 +205,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     horrorMovies,
     romanceMovies,
     documentaries,
+    tvPopular,
   ] = await Promise.all([
     fetch(requests.fetchNetflixOriginals).then((res) => res.json()),
     fetch(requests.fetchTrending).then((res) => res.json()),
@@ -138,6 +215,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     fetch(requests.fetchHorrorMovies).then((res) => res.json()),
     fetch(requests.fetchRomanceMovies).then((res) => res.json()),
     fetch(requests.fetchDocumentaries).then((res) => res.json()),
+    fetch(tvRequests.fetchPopular).then((res) => res.json()),
   ]);
 
   return {
@@ -150,6 +228,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
       documentaries: documentaries.results,
+      tvPopular: tvPopular.results,
     },
   };
 };
+
+// TODO: Fix Hydration Error - Fix Typescript does not return "Runtime" - Add Real Watch Page

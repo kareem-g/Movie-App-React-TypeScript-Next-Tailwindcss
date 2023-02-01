@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Movie } from "types";
 import { useRecoilState } from "recoil";
 import { modalState, movieState } from "atoms/ModalAtoms";
+import { useStoreActions, useStoreState } from "easy-peasy";
 
 export default function Banner({
   netflixOriginals,
@@ -12,8 +13,17 @@ export default function Banner({
   netflixOriginals: Movie[];
 }) {
   const [movie, setMovie] = useState<Movie | null>(null);
-  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  const [showModal, setShowModal] = useRecoilState(modalState);
+
+  const setModalOpen = useStoreActions((actions: any) => actions.setModalOpen);
+  const setCurrentMovie = useStoreActions(
+    (actions: any) => actions.setCurrentMovie
+  );
+
+  const handleModalOpen = (movie: any) => {
+    setCurrentMovie(movie);
+    setModalOpen(true);
+  };
+
   useEffect(() => {
     setMovie(
       netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)]
@@ -44,8 +54,7 @@ export default function Banner({
         <button
           className="text-black bg-white bannerButton"
           onClick={() => {
-            setCurrentMovie(movie);
-            setShowModal(true);
+            handleModalOpen(movie);
           }}
         >
           <Play className="w-4 h-4 text-black md:h-7 md:w-7" />
@@ -54,9 +63,7 @@ export default function Banner({
 
         <button
           onClick={() => {
-            console.log("More Info clicked: ", movie?.title);
-            setCurrentMovie(movie);
-            setShowModal(true);
+            handleModalOpen(movie);
           }}
           className="bannerButton bg-[gray]/50"
         >

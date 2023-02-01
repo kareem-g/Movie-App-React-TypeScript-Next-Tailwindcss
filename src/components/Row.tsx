@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "heroicons-react";
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Movie } from "types";
 import { Thumbnail } from "./Thumbnail";
+import ThumbnailSkeleton from "./ThumbnailSkeleton";
 
 export const Row = ({
   type,
@@ -39,7 +40,7 @@ export const Row = ({
 
   return (
     <div className="h-40 space-y-0.5 md:space-y-2">
-      <h2 className="w-60 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white hover:text-shadow-md md:text-xl lg:text-2xl">
+      <h2 className="w-auto cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white hover:text-shadow-md md:text-xl lg:text-2xl">
         {title}
       </h2>
       <div className="group relative md:-ml-2">
@@ -53,18 +54,24 @@ export const Row = ({
           ref={rowRef}
           className={
             isSearch && movies!.length >= 4
-              ? `grid overflow-x-hidden gap-y-6 gap-x-24`
+              ? `grid overflow-hidden gap-6 m-auto`
               : `flex items-center scrollbar-hide space-x-0.5 overflow-x-scroll md:space-x-2.5 md:p-2`
           }
         >
-          {movies.map((movie) => (
-            <Thumbnail
-              isDetails={isDetails}
-              key={movie.id}
-              movie={movie}
-              type={type}
-            />
-          ))}
+          {movies ? (
+            <>
+              {movies.map((movie) => (
+                <Thumbnail
+                  isDetails={isDetails}
+                  key={movie.id}
+                  movie={movie}
+                  type={type}
+                />
+              ))}
+            </>
+          ) : (
+            <ThumbnailSkeleton />
+          )}
         </div>
         {!isSearch && (
           <ChevronRight

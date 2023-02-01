@@ -1,11 +1,13 @@
 import { modalState, movieState } from "atoms/ModalAtoms";
 import Image from "next/legacy/image";
-import React from "react";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useState } from "react";
 import { Movie } from "types";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import { PlusCircle } from "heroicons-react";
+import { Check, Plus } from "heroicons-react";
+import { Tooltip } from "@mui/material";
+import { useStoreActions, useStoreState } from "easy-peasy";
+import ThumbnailSkeleton from "./ThumbnailSkeleton";
 
 export const Thumbnail = ({
   movie,
@@ -22,8 +24,29 @@ export const Thumbnail = ({
 }) => {
   const router = useRouter();
 
-  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  const [showModal, setShowModal] = useRecoilState(modalState);
+  const setCurrentMovie = useStoreActions(
+    (actions: any) => actions.setCurrentMovie
+  );
+  const setModalOpen = useStoreActions((actions: any) => actions.setModalOpen);
+
+  const handleModalOpen = (movie: any) => {
+    setModalOpen(true);
+    setCurrentMovie(movie);
+  };
+
+  const myListIds = useStoreState((state: any) => state.myListIds);
+  const addToMyList = useStoreActions((actions: any) => actions.addToMyList);
+  const removeFromMyList = useStoreActions(
+    (actions: any) => actions.removeFromMyList
+  );
+
+  const toggleMyList = () => {
+    if (myListIds.includes(movie?.id)) {
+      removeFromMyList(movie?.id);
+    } else {
+      addToMyList(movie);
+    }
+  };
 
   const handleChangePage = () => {
     if (isfavourite) {
@@ -63,73 +86,92 @@ export const Thumbnail = ({
         }}
         // onClick={handleChangePage}
         onClick={() => {
-          setCurrentMovie(movie);
-          setShowModal(true);
-          // handleChangePage
+          handleModalOpen(movie);
         }}
-        className={
-          isDetails
-            ? `relative h-28 min-w-[180px] cursor-pointer transition-transform duration-200 ease-out md:h-[200px] md:min-w-[350px] md:hover:scale-105`
-            : `relative h-28 min-w-[180px] cursor-pointer transition-transform duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105`
-        }
       >
         {movie.backdrop_path || movie.poster_path ? (
           <div
             className={`relative h-28 min-w-[180px] cursor-pointer transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105`}
           >
-            {/* <div
-              style={{
-                background: `linear-gradient(to top, rgb(6, 6, 6) 15%, transparent 100%), url(${baseUrl}${
-                  movie?.backdrop_path || movie?.poster_path
-                })`,
-                backgroundSize: "cover",
-                backgroundPosition: "50%",
-              }}
-            > */}
-
-            {/* <div className="flex items-end h-full">
-              <button
-                className="p-3 z-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPlayTrailer;
-                }}
-              >
-                <PlayOutline />
-                <span>Add to My List</span>
-              </button>
-            </div> */}
-
             <div className="absolute left-0 top-0 right-0 bottom-0">
-              <Image
-                src={`https://image.tmdb.org/t/p/w500${
-                  movie.backdrop_path || movie.poster_path
-                }`}
-                layout="fill"
-                className="rounded-sm object-cover md:rounded"
-                alt={movie.name}
-              />
+              {movie.backdrop_path || movie.poster_path ? (
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${
+                    movie.backdrop_path || movie.poster_path
+                  }`}
+                  layout="fill"
+                  className="rounded-sm object-cover md:rounded"
+                  alt={movie.name}
+                />
+              ) : (
+                <ThumbnailSkeleton />
+              )}
+
               <div className="transition-all duration-200 ease-out absolute top-0 bottom-0 right-0 left-0 hover:bg-gradient-to-t from-black to-transparent h-full flex items-end">
-                <button
-                  className="p-2 z-10 flex flex-row gap-1 items-center"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onPlayTrailer;
-                  }}
-                >
-                  <PlusCircle />
-                  <span className="text-sm">Add to My List</span>
-                </button>
+                <div className="text-center text-white opacity-0 hover:opacity-100">
+                  <div className="z-10 absolute bottom-0 top-0 left-0 right-0 flex items-end justify-between p-2">
+                    <button
+                      className="thumbnailButton"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleMyList();
+                        onPlayTrailer;
+                      }}
+                    >
+                      {myListIds.includes(movie?.id) ? (
+                        <Tooltip title="Remove From My List" placement="bottom">
+                          <Check className="h-5 w-5" />
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title="Add To My List" placement="bottom">
+                          <Plus className="h-6 w-6" />
+                        </Tooltip>
+                      )}
+                    </button>
+
+                    <button
+                      className="thumbnailButton"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onPlayTrailer;
+                      }}
+                    >
+                      <Tooltip title="Play" placement="bottom">
+                        {/* <Play className="h-6 w-6" /> */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="white"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                          />
+                        </svg>
+                      </Tooltip>
+                    </button>
+                  </div>
+                  <div className="absolute bottom-0 top-0 left-0 right-0 flex items-center justify-center p-2">
+                    <p className="text-xs font-black">
+                      {movie?.title || movie?.original_name}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         ) : (
-          // </div>
           <div
             role="status"
-            className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center"
+            // className={`relativecursor-pointer transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105`}
+
+            className="relative h-28 min-w-[180px] md:h-36 md:min-w-[260px] animate-pulse flex items-center"
           >
-            <div className="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+            <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
               <svg
                 className="w-12 h-12 text-gray-200"
                 xmlns="http://www.w3.org/2000/svg"
