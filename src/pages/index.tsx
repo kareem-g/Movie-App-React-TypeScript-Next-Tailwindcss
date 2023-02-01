@@ -7,8 +7,6 @@ import { GetServerSideProps } from "next";
 import { Movie } from "types";
 import { Row } from "@/components/Row";
 import { motion } from "framer-motion";
-import { useRecoilValue } from "recoil";
-import { modalState } from "atoms/ModalAtoms";
 import Modal from "@/components/Modal";
 import { Suspense, useEffect, useState } from "react";
 import { useStoreActions, useStoreRehydrated, useStoreState } from "easy-peasy";
