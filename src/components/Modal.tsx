@@ -88,7 +88,7 @@ export default function Modal() {
     fontWeight: "bold",
     fontSize: "14px",
     padding: "15px",
-    textTransform: "uppercase",
+    textTransform: "uppercase" as const,
     borderRadius: "9999px",
     maxWidth: "1000px",
   };
