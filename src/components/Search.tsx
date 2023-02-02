@@ -7,11 +7,9 @@ function Search() {
   const router = useRouter();
 
   const handleChange = (e: any) => {
+    setSearchTerm(e.target.value);
     if (e.target.value.length > 2) {
-      setSearchTerm(e.target.value);
-      setTimeout(() => {
-        router.push(`/?search=${searchTerm}`);
-      }, 1000);
+      router.push(`/?search=${searchTerm}`);
     } else {
       router.push("/");
     }
@@ -22,15 +20,21 @@ function Search() {
       <div className="bg-transparent hover:bg-gray-900 px-4 rounded-xl items-center text-center flex">
         <input
           type="text"
+          value={searchTerm}
           onChange={handleChange}
-          placeholder="Search Titles, people, genres"
+          placeholder="Titles, people, genres"
           className="bg-transparent text-lg font-medium hover:bg-gray-900 w-[400px] h-[50px] px-4 py-2 rounded-xl placeholder:text-lg font-md text-white outline-none focus:bg-gray-900"
         />
         <button className="px-2.5">
           {searchTerm == "" ? (
             <SearchIcon className="hidden sm:inline sm:w-6 sm:h-6 cursor-pointer" />
           ) : (
-            <XCircleOutline onClick={() => router.push("/")} />
+            <XCircleOutline
+              onClick={() => {
+                setSearchTerm("");
+                router.push("/");
+              }}
+            />
           )}
         </button>
       </div>
