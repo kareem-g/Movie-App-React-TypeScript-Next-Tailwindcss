@@ -1,22 +1,10 @@
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  BellOutline,
-  SearchCircleOutline,
-  SearchOutline,
-} from "heroicons-react";
+import { BellOutline } from "heroicons-react";
 import Link from "next/link";
 import Search from "./Search";
 
-export const Header = ({
-  isSearch,
-  setSearchTerm,
-  searchTrem,
-}: {
-  isSearch?: boolean;
-  setSearchTerm?: any;
-  searchTrem?: string;
-}) => {
+export const Header = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   const handleScroll = useCallback(() => {
@@ -43,29 +31,29 @@ export const Header = ({
 
         <ul className="hidden space-x-4 md:flex">
           <li>
-            <a href="" className="headerLink">
+            <Link href="/" className="headerLink">
               Home
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/shows" className="headerLink">
+            <Link href="/shows" className="headerLink">
               TV Shows
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/latest" className="headerLink">
+            <Link href="/latest" className="headerLink">
               New & Popular
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/movies" className="headerLink">
+            <Link href="/movies" className="headerLink">
               Movies
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/MyList" className="headerLink">
+            <Link href="/MyList" className="headerLink">
               My List
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

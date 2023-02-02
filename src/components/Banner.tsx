@@ -3,9 +3,7 @@ import { InformationCircleOutline, Play } from "heroicons-react";
 import Image from "next/legacy/image";
 import React, { useEffect, useState } from "react";
 import { Movie } from "types";
-import { useRecoilState } from "recoil";
-import { modalState, movieState } from "atoms/ModalAtoms";
-import { useStoreActions, useStoreState } from "easy-peasy";
+import { useStoreActions } from "easy-peasy";
 
 export default function Banner({
   netflixOriginals,

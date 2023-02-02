@@ -9,8 +9,7 @@ import { Row } from "@/components/Row";
 import { motion } from "framer-motion";
 import Modal from "@/components/Modal";
 import { Suspense, useEffect, useState } from "react";
-import { useStoreActions, useStoreRehydrated, useStoreState } from "easy-peasy";
-import ThumbnailSkeleton from "@/components/ThumbnailSkeleton";
+import { useStoreActions, useStoreState } from "easy-peasy";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -41,35 +40,31 @@ export default function Home({
     state.myList.sort((a: any, b: any) => b.dateAdded - a.dateAdded)
   );
   const modalOpen = useStoreState((state: any) => state.modalOpen);
-  const isRehydrated = useStoreRehydrated();
   const clearMyList = useStoreActions((actions: any) => actions.clearMyList);
 
-  const [data, setData] = useState<any>([]);
+  const [searchResults, setSearchResults] = useState<any>([]);
   const router = useRouter();
 
   const slug = router.query.search;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchData = async () => {
-    const movieSearchdata = await fetch(
-      `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US&query=${slug}&page=1&include_adult=true&media_type=`
-    ).then((res) => res.json());
-    setData(movieSearchdata.results);
-  };
-
   useEffect(() => {
-    fetchData();
-  }, [slug, fetchData]);
+    const fetchSearchQuery = async () => {
+      const movieSearchdata = await fetch(
+        `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US&query=${slug}&page=1&include_adult=false`
+      ).then((res) => res.json());
+      setSearchResults(movieSearchdata.results);
+    };
 
-  const MoviesAndSeries = (arr: any, media_type: any) => {
+    fetchSearchQuery();
+  }, [slug]);
+
+  const FilterMoviesAndSeries = (arr: any, media_type: any) => {
     if (slug != "") {
       return arr.filter((obj: any) => obj.media_type !== media_type);
     } else {
-      return null;
+      return;
     }
   };
-
-  console.log("Slug Is", MoviesAndSeries(data, "person"));
 
   return (
     <Suspense>
@@ -93,7 +88,7 @@ export default function Home({
                 <Row
                   isDetails={false}
                   title="Search"
-                  movies={MoviesAndSeries(data, "person")}
+                  movies={FilterMoviesAndSeries(searchResults, "person")}
                   type="movie"
                   isSearch={true}
                 />
@@ -105,26 +100,24 @@ export default function Home({
               <Banner netflixOriginals={topRated} />
 
               {/* <h1 className="flex min-h-screen flex-col items-center justify-center py-2">
-          Netflix - Home
-          <button
-            onClick={() => {
-              clearMyList();
-            }}
-          >
-            clear my list
-          </button>
-        </h1> */}
+                Netflix - Home
+                 <button
+                  onClick={() => {
+                    clearMyList();
+                  }}
+                >
+                  clear my list
+                </button>
+            
+              </h1> */}
+
               <section className="md:space-y-16 pt-36 pb-4 mb-4">
-                {myList.length > 0 && (
-                  <>
-                    <Row
-                      isDetails={false}
-                      title="My List"
-                      movies={myList}
-                      type=""
-                    />
-                  </>
-                )}
+                <Row
+                  isDetails={false}
+                  title="My List"
+                  movies={myList}
+                  type=""
+                />
                 <Row
                   isDetails={false}
                   title="Popular TV Shows"

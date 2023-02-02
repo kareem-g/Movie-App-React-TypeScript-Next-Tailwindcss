@@ -1,6 +1,5 @@
-import { modalState, movieState } from "atoms/ModalAtoms";
 import Image from "next/legacy/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Movie } from "types";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
@@ -75,100 +74,33 @@ export const Thumbnail = ({
   };
 
   return (
-    <>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{
-          duration: 0.8,
-          delay: 0.5,
-          ease: [0, 0.71, 0.2, 1.01],
-        }}
-        // onClick={handleChangePage}
-        onClick={() => {
-          handleModalOpen(movie);
-        }}
-      >
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="relative h-28 min-w-[180px] cursor-pointer transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105"
+      transition={{
+        duration: 0.8,
+        delay: 0.5,
+        ease: [0, 0.71, 0.2, 1.01],
+      }}
+      // onClick={handleChangePage}
+      onClick={() => {
+        handleModalOpen(movie);
+      }}
+    >
+      <div className="absolute left-0 top-0 right-0 bottom-0">
         {movie.backdrop_path || movie.poster_path ? (
-          <div
-            className={`relative h-28 min-w-[180px] cursor-pointer transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105`}
-          >
-            <div className="absolute left-0 top-0 right-0 bottom-0">
-              {movie.backdrop_path || movie.poster_path ? (
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500${
-                    movie.backdrop_path || movie.poster_path
-                  }`}
-                  layout="fill"
-                  className="rounded-sm object-cover md:rounded"
-                  alt={movie.name}
-                />
-              ) : (
-                <ThumbnailSkeleton />
-              )}
-
-              <div className="transition-all duration-200 ease-out absolute top-0 bottom-0 right-0 left-0 hover:bg-gradient-to-t from-black to-transparent h-full flex items-end">
-                <div className="text-center text-white opacity-0 hover:opacity-100">
-                  <div className="z-10 absolute bottom-0 top-0 left-0 right-0 flex items-end justify-between p-2">
-                    <button
-                      className="thumbnailButton"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleMyList();
-                        onPlayTrailer;
-                      }}
-                    >
-                      {myListIds.includes(movie?.id) ? (
-                        <Tooltip title="Remove From My List" placement="bottom">
-                          <Check className="h-5 w-5" />
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="Add To My List" placement="bottom">
-                          <Plus className="h-6 w-6" />
-                        </Tooltip>
-                      )}
-                    </button>
-
-                    <button
-                      className="thumbnailButton"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onPlayTrailer;
-                      }}
-                    >
-                      <Tooltip title="Play" placement="bottom">
-                        {/* <Play className="h-6 w-6" /> */}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="white"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-4 h-4"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                          />
-                        </svg>
-                      </Tooltip>
-                    </button>
-                  </div>
-                  <div className="absolute bottom-0 top-0 left-0 right-0 flex items-center justify-center p-2">
-                    <p className="text-xs font-black">
-                      {movie?.title || movie?.original_name}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Image
+            src={`https://image.tmdb.org/t/p/w500${
+              movie.backdrop_path || movie.poster_path
+            }`}
+            layout="fill"
+            className="rounded-sm object-cover md:rounded"
+            alt={movie.name}
+          />
         ) : (
           <div
             role="status"
-            // className={`relativecursor-pointer transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105`}
-
             className="relative h-28 min-w-[180px] md:h-36 md:min-w-[260px] animate-pulse flex items-center"
           >
             <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
@@ -184,7 +116,62 @@ export const Thumbnail = ({
             </div>
           </div>
         )}
-      </motion.div>
-    </>
+        <div className="transition-all duration-200 ease-out absolute top-0 bottom-0 right-0 left-0 hover:bg-gradient-to-t from-black to-transparent h-full flex items-end">
+          <div className="text-center text-white opacity-0 hover:opacity-100">
+            <div className="z-10 absolute bottom-0 top-0 left-0 right-0 flex items-end justify-between p-2">
+              <button
+                className="thumbnailButton"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMyList();
+                  onPlayTrailer;
+                }}
+              >
+                {myListIds.includes(movie?.id) ? (
+                  <Tooltip title="Remove From My List" placement="bottom">
+                    <Check className="h-5 w-5" />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Add To My List" placement="bottom">
+                    <Plus className="h-6 w-6" />
+                  </Tooltip>
+                )}
+              </button>
+
+              <button
+                className="thumbnailButton"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPlayTrailer;
+                }}
+              >
+                <Tooltip title="Play" placement="bottom">
+                  {/* <Play className="h-6 w-6" /> */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="white"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                    />
+                  </svg>
+                </Tooltip>
+              </button>
+            </div>
+            <div className="absolute bottom-0 top-0 left-0 right-0 flex items-center justify-center p-2">
+              <p className="text-xs font-black">
+                {movie?.title || movie?.original_name}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
