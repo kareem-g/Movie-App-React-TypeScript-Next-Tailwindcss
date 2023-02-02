@@ -59,7 +59,7 @@ export default function Home({
   }, [slug]);
 
   const FilterMoviesAndSeries = (arr: any, media_type: any) => {
-    if (slug != "") {
+    if (slug !== "") {
       return arr.filter((obj: any) => obj.media_type !== media_type);
     } else {
       return;
@@ -87,8 +87,9 @@ export default function Home({
               <section className="md:space-y-16 pt-36 pb-4 mb-4">
                 <Row
                   isDetails={false}
-                  title="Search"
-                  movies={FilterMoviesAndSeries(searchResults, "person")}
+                  title={`Explore titles Related to: ${slug.toString()}`}
+                  // movies={FilterMoviesAndSeries(searchResults, "person")}
+                  movies={searchResults}
                   type="movie"
                   isSearch={true}
                 />

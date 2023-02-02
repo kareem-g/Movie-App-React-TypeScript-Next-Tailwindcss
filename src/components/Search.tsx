@@ -1,46 +1,38 @@
-import { SearchCircle } from "heroicons-react";
-import Link from "next/link";
+import { Search as SearchIcon, XCircleOutline } from "heroicons-react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function Search() {
-  const [val, setVal] = useState<any>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const router = useRouter();
 
   const handleChange = (e: any) => {
-    if (e.target.value) {
-      setVal(e.target.value);
-      router.push(`/?search=${val}`);
-    } else if (e.target.value.length < 1) {
+    if (e.target.value.length > 2) {
+      setSearchTerm(e.target.value);
+      setTimeout(() => {
+        router.push(`/?search=${searchTerm}`);
+      }, 1000);
+    } else {
       router.push("/");
     }
   };
 
-  const handleClick = () => {
-    var SearchBar: any = document.getElementById("search");
-    var SearchInput: any = document.getElementById("searchinput");
-    SearchInput.focus();
-    SearchInput.style.maxWidth = "800px";
-    SearchInput.style.marginLeft = "0.7rem";
-    SearchBar.style.width = "auto";
-  };
-
   return (
-    <div className="cursor-pointer right-0">
-      <div
-        className={` text-white h-10 w-10  rounded-full flex items-center p-2.5 shadow-2xl relative right-0`}
-        id="search"
-        onClick={handleClick}
-      >
-        <SearchCircle size={24} strokeWidth={2} />
+    <div className="hidden md:flex justify-center items-center text-center">
+      <div className="bg-transparent hover:bg-gray-900 px-4 rounded-xl items-center text-center flex">
         <input
           type="text"
-          autoComplete={"off"}
           onChange={handleChange}
-          className={`text-white bg-transparent border-none outline-none max-w-0 ease-in-out transition-all duration-700`}
-          placeholder="Search for Movies,Series..."
-          id="searchinput"
+          placeholder="Search Titles, people, genres"
+          className="bg-transparent text-lg font-medium hover:bg-gray-900 w-[400px] h-[50px] px-4 py-2 rounded-xl placeholder:text-lg font-md text-white outline-none focus:bg-gray-900"
         />
+        <button className="px-2.5">
+          {searchTerm == "" ? (
+            <SearchIcon className="hidden sm:inline sm:w-6 sm:h-6 cursor-pointer" />
+          ) : (
+            <XCircleOutline onClick={() => setSearchTerm("")} />
+          )}
+        </button>
       </div>
     </div>
   );

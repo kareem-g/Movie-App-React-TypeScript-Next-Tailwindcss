@@ -53,8 +53,9 @@ export const Row = ({
         <div
           ref={rowRef}
           className={
-            isSearch && movies!.length >= 4
-              ? `grid overflow-hidden items-center gap-3 m-auto space-x-0.5 `
+            // isSearch && movies!.length >= 4
+            isSearch
+              ? `grid overflow-hidden items-center gap-3 m-auto pr-16 pt-5`
               : `flex items-center scrollbar-hide space-x-0.5 overflow-x-scroll md:space-x-2.5 md:p-2`
           }
         >
