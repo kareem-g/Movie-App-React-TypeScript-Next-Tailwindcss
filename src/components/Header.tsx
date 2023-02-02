@@ -62,16 +62,8 @@ export const Header = () => {
 
       {/* Search, Notification bell and profile picture */}
       <div className="flex items-center space-x-4 text-sm">
-        {/* <Search className="hidden h-6 w-6 sm:inline" /> */}
         <Search />
-        {/* {isSearch ? (
-          <Search searchTrem={searchThrem!} setSearchTerm={setSearchTerm} />
-        ) : (
-          <SearchCircleOutline
-            className="hidden sm:inline sm:w-6 sm:h-6 cursor-pointer"
-            onClick={() => router.push("/")}
-          />
-        )} */}
+
         <p className="hidden uppercase lg:inline">DVD</p>
         <BellOutline className="h-6 w-6" />
         <Link href="/YourAccount">
