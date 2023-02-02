@@ -1,22 +1,4 @@
 import { createStore, action, persist } from "easy-peasy";
-import {
-  createStateSyncMiddleware,
-  initMessageListener,
-} from "redux-state-sync";
-
-const syncMiddleware = createStateSyncMiddleware({
-  whitelist: [
-    "searchResults",
-    "favourites",
-    "currentPage",
-    "favouritesIds",
-    "myList",
-    "myListIds",
-    "allowPorn",
-    "currentMovie",
-  ],
-  logger: console.log, // Optional, you can add a custom logger
-});
 
 export const store = createStore(
   persist(
