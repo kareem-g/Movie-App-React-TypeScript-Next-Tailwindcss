@@ -30,7 +30,7 @@ function Search() {
           {searchTerm == "" ? (
             <SearchIcon className="hidden sm:inline sm:w-6 sm:h-6 cursor-pointer" />
           ) : (
-            <XCircleOutline onClick={() => setSearchTerm("")} />
+            <XCircleOutline onClick={() => router.push("/")} />
           )}
         </button>
       </div>
