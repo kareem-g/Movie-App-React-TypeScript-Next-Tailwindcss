@@ -22,12 +22,14 @@ export const Header = () => {
   return (
     <header className={`${isScrolled && "bg-[#141414]/30 backdrop-blur-md"}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
-        <Image
-          width={100}
-          height={100}
-          src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-          alt="netflix"
-        />
+        <Link href="/">
+          <Image
+            width={100}
+            height={100}
+            src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+            alt="netflix"
+          />
+        </Link>
 
         <ul className="hidden space-x-4 md:flex">
           <li>
