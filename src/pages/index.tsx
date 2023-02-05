@@ -171,7 +171,7 @@ export default function Home({
                 movies={horrorMovies}
                 type="movie"
               />
-              <Row
+              {/* <Row
                 isDetails={false}
                 title="Romance Movies"
                 movies={romanceMovies}
@@ -182,7 +182,7 @@ export default function Home({
                 title="Documentaries"
                 movies={documentaries}
                 type="movie"
-              />
+              /> */}
             </section>
           </>
         )}
